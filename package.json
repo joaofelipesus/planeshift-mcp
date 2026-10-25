@@ -1,0 +1,33 @@
+{
+  "name": "planeshift-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Planeshift, the operational memory for software projects",
+  "type": "module",
+  "license": "MIT",
+  "author": "João Felipe Lopes de Sus",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joaofelipesus/planeshift-mcp.git"
+  },
+  "homepage": "https://github.com/joaofelipesus/planeshift-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/joaofelipesus/planeshift-mcp/issues"
+  },
+  "bin": {
+    "planeshift-mcp": "src/index.js"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^4.6.7"
+  }
+}
