@@ -43,6 +43,17 @@ Quit Claude Desktop completely and open it again. The tools appear under the too
 
 `list_projects`, `get_timeline`, `add_note`, `add_meeting`, `add_todo_action`, `add_important_link`.
 
+### Development mode
+
+To use a local Planeshift (`http://localhost:3000`) without touching your production login, set `PLANESHIFT_ENV=development`, or pass `--dev` to the commands:
+
+```
+node src/index.js login --dev       # saves ~/.config/planeshift/credentials.development.json
+claude mcp add planeshift -e PLANESHIFT_ENV=development -- node /path/to/planeshift-mcp/src/index.js
+```
+
+For Claude Desktop, use `"command": "node"` with the full path to `src/index.js` and `"env": { "PLANESHIFT_ENV": "development" }`. Development mode keeps its own credentials file, and `--url` still overrides the address.
+
 ### Without `login`
 
 Set `PLANESHIFT_URL` and `PLANESHIFT_TOKEN` (create a token on the API tokens page) in the `env` of the config above, or with `claude mcp add -e PLANESHIFT_URL=... -e PLANESHIFT_TOKEN=...`. They take precedence over the saved credentials.

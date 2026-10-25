@@ -117,3 +117,31 @@ test("logout deletes the file even if the server is unreachable", async (t) => {
 
   assert.deepEqual(readCredentials(), {});
 });
+
+test("development mode defaults to localhost and keeps separate credentials", async (t) => {
+  useConfigDir(t);
+  setEnv(t, { PLANESHIFT_ENV: "development", PLANESHIFT_URL: undefined });
+  let opened;
+
+  await login({ open: (url) => { opened = new URL(url); browser(() => ({ token: "ps_dev" }))(url); }, log: () => {} });
+
+  assert.equal(opened.origin, "http://localhost:3000");
+  assert.match(credentialsPath(), /credentials\.development\.json$/);
+  assert.equal(readCredentials().token, "ps_dev");
+
+  setEnv(t, { PLANESHIFT_ENV: undefined });
+  assert.match(credentialsPath(), /credentials\.json$/);
+  assert.deepEqual(readCredentials(), {});
+});
+
+test("production is the default: the Railway url and the regular credentials file", async (t) => {
+  useConfigDir(t);
+  setEnv(t, { PLANESHIFT_ENV: undefined, PLANESHIFT_URL: undefined });
+  let opened;
+
+  await login({ open: (url) => { opened = new URL(url); browser(() => ({ token: "ps_prod" }))(url); }, log: () => {} });
+
+  assert.equal(opened.origin, "https://planeshift-production.up.railway.app");
+  assert.match(credentialsPath(), /credentials\.json$/);
+  assert.deepEqual(readCredentials(), { url: "https://planeshift-production.up.railway.app", token: "ps_prod" });
+});

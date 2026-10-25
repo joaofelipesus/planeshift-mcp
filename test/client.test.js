@@ -67,3 +67,9 @@ test("the environment wins over the saved credentials", async (t) => {
   assert.equal(calls[0].url.origin, "http://planeshift.test");
   assert.equal(calls[0].init.headers.Authorization, "Bearer ps_token");
 });
+
+test("the not-logged-in error points to the dev login in development mode", async (t) => {
+  setEnv(t, { PLANESHIFT_URL: undefined, PLANESHIFT_TOKEN: undefined, PLANESHIFT_ENV: "development", PLANESHIFT_CONFIG_DIR: mkdtempSync(join(tmpdir(), "planeshift-")) });
+
+  await assert.rejects(api("/projects"), /planeshift-mcp login --dev/);
+});

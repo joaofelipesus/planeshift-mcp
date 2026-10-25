@@ -1,5 +1,5 @@
 // Thin HTTP client for the Planeshift Rails API. All business rules live in Rails.
-import { readCredentials } from "./credentials.js";
+import { developmentMode, readCredentials } from "./credentials.js";
 
 // The environment wins over the credentials saved by `planeshift-mcp login`.
 export function settings() {
@@ -15,7 +15,8 @@ export async function api(path, init = {}) {
   const { baseUrl, token } = settings();
 
   if (!baseUrl || !token) {
-    throw new Error("Not logged in. Run `npx planeshift-mcp login`, or set PLANESHIFT_URL and PLANESHIFT_TOKEN");
+    const login = developmentMode() ? "planeshift-mcp login --dev" : "npx planeshift-mcp login";
+    throw new Error(`Not logged in. Run \`${login}\`, or set PLANESHIFT_URL and PLANESHIFT_TOKEN`);
   }
 
   const response = await fetch(new URL(`/api/v1${path}`, baseUrl), {

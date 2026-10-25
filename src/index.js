@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 // No arguments: the MCP server on stdio. `login` / `logout`: manage the saved credentials.
-const [command, ...args] = process.argv.slice(2);
+// `--dev` is the same as PLANESHIFT_ENV=development (local Planeshift, separate credentials).
+const [command, ...rest] = process.argv.slice(2);
+const args = rest.filter((arg) => arg !== "--dev");
+if (rest.includes("--dev")) process.env.PLANESHIFT_ENV = "development";
 
 if (command === "login") {
   const { login } = await import("./login.js");
@@ -13,7 +16,7 @@ if (command === "login") {
   const { startServer } = await import("./server.js");
   await startServer();
 } else {
-  fail(new Error(`Unknown command "${command}". Usage: planeshift-mcp [login [--url URL] | logout]`));
+  fail(new Error(`Unknown command "${command}". Usage: planeshift-mcp [login | logout] [--dev] [--url URL]`));
 }
 
 function fail(error) {

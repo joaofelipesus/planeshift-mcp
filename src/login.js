@@ -3,9 +3,8 @@ import { spawn } from "node:child_process";
 import { createServer } from "node:http";
 import { hostname } from "node:os";
 import { authorizedPage, deniedPage } from "./pages.js";
-import { deleteCredentials, readCredentials, writeCredentials } from "./credentials.js";
+import { defaultUrl, deleteCredentials, readCredentials, writeCredentials } from "./credentials.js";
 
-export const DEFAULT_URL = "https://planeshift-production.up.railway.app";
 const TIMEOUT_MS = 5 * 60 * 1000;
 
 export function openBrowser(url) {
@@ -18,7 +17,7 @@ export function openBrowser(url) {
 // Opens the browser on Planeshift's authorization page and waits for it to send the token back to a
 // one-shot listener on 127.0.0.1. `open` and `log` are injectable for tests.
 export async function login({ url, open = openBrowser, log = console.log, timeoutMs = TIMEOUT_MS } = {}) {
-  const baseUrl = (url || process.env.PLANESHIFT_URL || readCredentials().url || DEFAULT_URL).replace(/\/+$/, "");
+  const baseUrl = (url || process.env.PLANESHIFT_URL || readCredentials().url || defaultUrl()).replace(/\/+$/, "");
   const state = randomBytes(24).toString("base64url");
 
   const server = createServer();
